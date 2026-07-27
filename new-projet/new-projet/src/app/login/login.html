@@ -1,0 +1,149 @@
+<div class="login-container">
+
+  <div class="login-card" *ngIf="!afficherFondCaisse">
+    <ng-container *ngIf="mode === 'login'">
+
+      <h2>Connexion</h2>
+      <label>Nom</label>
+
+      <input
+        type="text"
+        [(ngModel)]="nom"
+        name="nom"
+        placeholder="Entrer votre nom"
+      />
+      <label>Email</label>
+
+      <input
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Entrer votre email"
+        (blur)="toucherEmail()"
+        [class.champ-invalide]="emailTouche && !emailValide"
+        [class.champ-valide]="emailTouche && emailValide"
+      />
+      <p *ngIf="emailTouche && !emailValide" class="msg-erreur-champ">
+        ✖ Email invalide.
+      </p>
+
+      <p *ngIf="emailTouche && emailValide" class="msg-succes-champ">
+        ✔ Email valide.
+      </p>
+      <label>Mot de passe</label>
+
+      <input
+        type="password"
+        [(ngModel)]="motDePasse"
+        name="motDePasse"
+        placeholder="Entrer votre mot de passe"
+        (blur)="toucherMotDePasse()"
+        [class.champ-invalide]="motDePasseTouche && !motDePasseValide"
+        [class.champ-valide]="motDePasseTouche && motDePasseValide"
+      />
+      <p *ngIf="motDePasseTouche && !motDePasseValide" class="msg-erreur-champ">
+        ✖ 6 caractères minimum.
+      </p>
+
+      <p *ngIf="motDePasseTouche && motDePasseValide" class="msg-succes-champ">
+        ✔ Mot de passe valide.
+      </p>
+      <div class="ligne-souvenir">
+
+        <input
+          type="checkbox"
+          id="seSouvenir"
+          [(ngModel)]="seSouvenir"
+          name="seSouvenir"
+        />
+
+        <label for="seSouvenir" class="label-checkbox">
+          Se souvenir de moi
+        </label>
+
+      </div>
+      <p *ngIf="erreur" class="erreur-message">
+        {{ erreur }}
+      </p>
+      <button 
+        class="btn-connexion"
+        (click)="seConnecter()">
+
+        Se connecter
+
+      </button>
+      <p 
+        class="lien-oublie"
+        (click)="afficherOublie()">
+
+        Mot de passe oublié ?
+
+      </p>
+    </ng-container>
+    <ng-container *ngIf="mode === 'oublie'">
+      <h2>Mot de passe oublié</h2>
+      <p class="sous-titre">
+        Entrez votre email pour recevoir un lien de réinitialisation.
+      </p>
+      <label>Email</label>
+      <input
+        type="email"
+        [(ngModel)]="emailOublie"
+        name="emailOublie"
+        placeholder="Entrer votre email"
+        (blur)="toucherEmailOublie()"
+        [class.champ-invalide]="emailOublieTouche && !emailOublieValide"
+        [class.champ-valide]="emailOublieTouche && emailOublieValide"
+      />
+      <p *ngIf="emailOublieTouche && !emailOublieValide" class="msg-erreur-champ">
+        ✖ Email invalide.
+      </p>
+      <p *ngIf="emailOublieTouche && emailOublieValide" class="msg-succes-champ">
+        ✔ Email valide.
+      </p>
+      <p *ngIf="erreur" class="erreur-message">
+        {{ erreur }}
+      </p>
+      <p *ngIf="message" class="succes-message">
+        {{ message }}
+      </p>
+      <button 
+        class="btn-connexion"
+        (click)="envoyerDemandeOublie()">
+
+        Envoyer
+
+      </button>
+      <p 
+        class="lien-oublie"
+        (click)="afficherLogin()">
+
+        Retour à la connexion
+
+      </p>
+    </ng-container>
+  </div>
+  <div class="modal" *ngIf="afficherFondCaisse">
+    <div class="modal-content">
+      <h2>Fond de caisse</h2>
+
+      <label>
+        Entrer le fond de caisse :
+      </label>
+
+      <input 
+        type="number"
+        [(ngModel)]="fondCaisse"
+        placeholder="Exemple : 100"
+      >
+      <button 
+        class="btn-connexion"
+        (click)="validerFondCaisse()">
+
+        Valider
+
+      </button>
+    </div>
+  </div>
+</div>
+

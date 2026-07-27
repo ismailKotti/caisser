@@ -1,0 +1,119 @@
+.paiement-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+}
+
+.paiement-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 400px;
+}
+
+.paiement-card h2 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.paiement-card label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.paiement-card input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.erreur-message {
+  color: #dc2626;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 16px;
+}
+
+.btn-valider {
+  width: 100%;
+  padding: 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.btn-archive {
+  width: 100%;
+  padding: 12px;
+  background-color: #e5e7eb;
+  color: #1f2937;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.champ-invalide {
+  border-color: #dc2626 !important;
+}
+
+.champ-valide {
+  border-color: #16a34a !important;
+}
+
+.msg-erreur-champ {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: -12px;
+  margin-bottom: 12px;
+}
+
+.msg-succes-champ {
+  color: #16a34a;
+  font-size: 13px;
+  margin-top: -12px;
+  margin-bottom: 12px;
+}
+.succes-message-global {
+  background-color: #dcfce7;
+  color: #16a34a;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.paiement-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+  padding: 20px;      /* évite que le contenu touche les bords sur petit écran */
+}
+
+.paiement-card {
+  background: white;
+  padding: 24px;       /* au lieu de 40px */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 420px;
+}

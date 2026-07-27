@@ -1,0 +1,84 @@
+<div class="archive-page">
+
+    
+    <h1>Archive des commandes</h1>
+
+    <div class="top-section">
+        <div class="search-area">
+            <input 
+                type="text" 
+                placeholder="Rechercher un article..." 
+                [(ngModel)]="recherche"
+            >
+            <button 
+                class="choose-btn" 
+                (click)="ouvrirChoix()">
+                Choisir Article
+            </button>
+        </div>
+
+        <div class="selected" *ngIf="articleSelectionne">
+            Article sélectionné : <b>{{articleSelectionne}}</b>
+        </div>
+    </div>
+
+    <div class="choose-panel" *ngIf="afficherChoix">
+        <div class="categories">
+            <button 
+                *ngFor="let cat of categories" 
+                (click)="changerCategorie(cat)" 
+                [class.active]="categorieActive === cat">
+                {{cat}}
+            </button>
+        </div>
+
+        <div class="articles">
+            <div 
+                class="article-card" 
+                *ngFor="let article of articlesFiltres" 
+                (click)="choisirArticle(article)">
+                {{article.nom}}
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding-left: 16px;">Articles achetés</th>
+                    <th>Montant Total</th>
+                    <th>Temps</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+<tr *ngFor="let cmd of commandesFiltrees">
+
+<td>
+  <div *ngFor="let article of cmd.articles">
+    {{article.nom}} x{{article.quantite}}
+  </div>
+</td>
+
+<td>
+  {{cmd.montant}} DT
+</td>
+
+<td>
+  {{cmd.temps | date:'dd/MM/yyyy HH:mm'}}
+</td>
+
+<td>
+  <button class="print-btn" (click)="imprimer(cmd)">
+    🔄 Réimprimer
+  </button>
+</td>
+
+</tr>
+</tbody>
+
+</table>
+</div>
+
+</div>

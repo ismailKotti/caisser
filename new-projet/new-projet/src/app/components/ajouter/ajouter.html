@@ -1,0 +1,72 @@
+<div class="form-container">
+
+  <h1>Ajouter un Article</h1>
+
+  <label>Nom du produit</label>
+  <input 
+    type="text" 
+    [(ngModel)]="article.nom"
+    name="nom">
+
+
+  <label>Prix</label>
+  <input 
+    type="number" 
+    [(ngModel)]="article.prix"
+    name="prix">
+
+
+  <label>Catégorie</label>
+
+  <div class="categorie-box">
+
+    <select 
+      [(ngModel)]="article.categorie"
+      name="categorie">
+
+      <option value="">
+        Choisir une catégorie
+      </option>
+
+      <option 
+        *ngFor="let c of categories" 
+        [value]="c">
+
+        {{ c }}
+
+      </option>
+
+    </select>
+
+
+    <button
+      type="button"
+      class="btn-categorie"
+      routerLink="/categorie">
+
+      + Nouvelle catégorie
+
+    </button>
+
+  </div>
+  <label>Image</label>
+
+  <input 
+    type="text" 
+    [(ngModel)]="article.image"
+    name="image">
+  <button 
+    type="button"
+    class="btn-ajouter" 
+    (click)="ajouter()">
+
+    Ajouter
+
+  </button>
+
+  <p class="error" *ngIf="messageErreur">
+    {{messageErreur}}
+  </p>
+
+
+</div>

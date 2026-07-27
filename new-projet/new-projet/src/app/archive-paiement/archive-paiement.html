@@ -1,0 +1,24 @@
+<div class="archive-container">
+  <h2>Archive des paiements</h2>
+
+  <table *ngIf="paiements.length > 0; else vide">
+    <thead>
+      <tr>
+        <th>Raison</th>
+        <th>Montant</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of paiements">
+        <td>{{ p.raison }}</td>
+        <td>{{ p.montant }} DT</td>
+        <td>{{ p.date }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #vide>
+    <p>Aucun paiement archivé.</p>
+  </ng-template>
+</div>

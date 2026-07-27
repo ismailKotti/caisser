@@ -1,0 +1,60 @@
+<div class="page">
+<div class="content">
+<div class="left-side">
+<div class="categories">
+<button class="categorie-btn" *ngFor="let cat of categories" (click)="changerCategorie(cat)" [class.active]="categorieActive === cat">
+{{ cat }}
+</button>
+</div>
+<div class="articles">
+<div class="card" *ngFor="let article of articlesFiltres" (click)="ajouterArticle(article)">
+<div class="image-box">
+<img [src]="article.image" alt="{{article.nom}}">
+</div>
+<div class="card-content">
+<h3>{{ article.nom }}</h3>
+<p class="categorie">{{ article.categorie }}</p>
+<span class="prix">{{ article.prix }} DT</span>
+</div>
+</div>
+</div>
+</div>
+<div class="caisse">
+<div class="message-success" *ngIf="message">
+{{ message }}
+</div>
+<h2>Articles au panier</h2>
+<div class="liste-panier">
+<div class="ligne titre">
+<span>Article</span>
+<span>Qté</span>
+<span>Prix</span>
+<span></span>
+</div>
+<div class="ligne" *ngFor="let item of panierGroupe">
+<div class="article-info">
+<img [src]="item.image" class="panier-img">
+<span class="article-nom">{{ item.nom }}</span>
+</div>
+<div class="qte-controls">
+<button class="qte-btn moins" (click)="diminuerArticle(item.id)">-</button>
+<span class="qte-valeur">{{ item.quantite }}</span>
+<button class="qte-btn plus" (click)="augmenterArticle(item.id)">+</button>
+</div>
+<span class="prix-total-ligne">{{ item.totalPrix }} DT</span>
+<button class="delete-btn" (click)="supprimerLigne(item.id)" title="Supprimer l'article">🗑️</button>
+</div>
+</div>
+<div class="footer-total">
+Total :
+<span>{{ total }} DT</span>
+</div>
+<button class="vider" (click)="viderPanier()" [disabled]="panier.length === 0">
+🗑️ Vider le panier
+</button>
+<button class="btn-valid" (click)="validerCommande()">
+🛒 Valider la commande
+</button>
+</div>
+</div>
+</div>

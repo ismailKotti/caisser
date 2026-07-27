@@ -1,0 +1,71 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Role {
+  id_role   String @id @default(uuid())
+  type_role String
+  users     User[]
+}
+
+model User {
+  id_user String  @id @default(uuid())
+  email   String  @unique
+  pass    String
+  roleId  String  @map("role")
+  role    Role    @relation(fields: [roleId], references: [id_role])
+  orders  Order[]
+  createdAt DateTime @default(now())
+}
+
+model Categorie {
+  id_cat   String    @id @default(uuid())
+  img      String
+  type_cat String
+  produits Produit[]
+  createdAt DateTime @default(now())
+}
+
+model Produit {
+  id_pro     String      @id @default(uuid())
+  name_pro   String
+  desc       String
+  img        String
+  prix_p     Float
+  id_cat     String
+  categorie  Categorie   @relation(fields: [id_cat], references: [id_cat])
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+}
+
+model Order {
+  id_order      String      @id @default(uuid())
+  incrementalId Int         @unique @default(autoincrement())
+  id_user       String
+  user          User        @relation(fields: [id_user], references: [id_user])
+  order_item    OrderItem[]
+  prix_total    Float       @map("prix total")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id_item  String  @id @default(uuid())
+  id_pro   String
+  quantit  Int
+  orderId  String
+  order    Order   @relation(fields: [orderId], references: [id_order])
+  produit  Produit @relation(fields: [id_pro], references: [id_pro])
+}
+
+model Payment {
+  id_pay String @id @default(uuid())
+  action String
+  prix_f Float
+  createdAt DateTime @default(now())
+}

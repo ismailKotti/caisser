@@ -1,0 +1,36 @@
+<div class="page container">
+    <h1>Gestion des catégories</h1>
+    
+    <div class="add-category-form">
+        <input 
+            type="text" 
+            placeholder="Nouvelle catégorie..." 
+            [(ngModel)]="nouvelleCategorie">
+        <button 
+            class="btn-add" 
+            (click)="ajouterCategorie()">
+            Ajouter
+        </button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Catégorie</th>
+                <th class="text-right">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of categories">
+                <td>{{ c }}</td>
+                <td class="text-right">
+                    <button 
+                        class="btn-delete" 
+                        (click)="supprimerCategorie(c)">
+                        Supprimer
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

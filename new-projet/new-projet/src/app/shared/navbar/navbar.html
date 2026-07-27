@@ -1,0 +1,47 @@
+<header class="navbar">
+
+  <div class="user">
+    Connected User
+  </div>
+
+  <div class="total">
+    Montant Total : {{ montantService.getMontantTotal() }} DT
+  </div>
+
+  <div class="actions">
+
+    <button routerLink="/caisse" class="btn-caisse">
+      Caisse
+    </button>
+
+    <div class="archive-box">
+
+      <button class="btn-archive" (click)="toggleArchiveMenu()">
+        Archive
+      </button>
+
+      <div class="archive-options" *ngIf="showArchiveMenu">
+
+        <button routerLink="/archive">
+          Archive
+        </button>
+
+        <button routerLink="/archive-paiement">
+          Archive paiement
+        </button>
+
+      </div>
+
+    </div>
+
+    <button routerLink="/paiement" class="btn-paiement">
+      Paiement
+    </button>
+
+    <button class="logout">
+      Déconnecter
+    </button>
+
+  </div>
+
+</header>

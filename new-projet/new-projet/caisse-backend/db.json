@@ -1,0 +1,105 @@
+{
+  "articles": [
+    {
+      "id": "1",
+      "nom": "Coca",
+      "prix": 3,
+      "image": "assets/coca.png",
+      "categorie": "Cold Drink"
+    },
+    {
+      "id": "2",
+      "nom": "Eau",
+      "prix": 2,
+      "image": "assets/eau.png",
+      "categorie": "Cold Drink"
+    },
+    {
+      "id": "3",
+      "nom": "Café",
+      "prix": 2,
+      "image": "assets/cafe.png",
+      "categorie": "Hot Drink"
+    },
+    {
+      "id": "4",
+      "nom": "Thé",
+      "prix": 2,
+      "image": "assets/the.png",
+      "categorie": "Hot Drink"
+    },
+    {
+      "id": "5",
+      "nom": "Pizza",
+      "prix": 10,
+      "image": "assets/pizza.png",
+      "categorie": "Food"
+    },
+    {
+      "id": "6",
+      "nom": "Burger",
+      "prix": 8,
+      "image": "assets/burger.png",
+      "categorie": "Food"
+    }
+  ],
+  "commandes": [
+    {
+      "articles": [
+        {
+          "id": "1",
+          "nom": "Coca",
+          "image": "assets/coca.png",
+          "quantite": 3,
+          "totalPrix": 9
+        },
+        {
+          "id": "3",
+          "nom": "Café",
+          "image": "assets/cafe.png",
+          "quantite": 3,
+          "totalPrix": 6
+        }
+      ],
+      "montant": 15,
+      "temps": "2026-07-20T09:24:04.799Z",
+      "id": "qFmKI_GHAaE"
+    },
+    {
+      "articles": [
+        {
+          "id": "3",
+          "nom": "Café",
+          "image": "assets/cafe.png",
+          "quantite": 3,
+          "totalPrix": 6
+        },
+        {
+          "id": "4",
+          "nom": "Thé",
+          "image": "assets/the.png",
+          "quantite": 4,
+          "totalPrix": 8
+        }
+      ],
+      "montant": 14,
+      "temps": "2026-07-20T09:24:32.925Z",
+      "id": "H4JIQzUhcps"
+    }
+  ],
+  "paiements": [
+    {
+      "raison": "hfhhf",
+      "montant": 88,
+      "date": "20/07/2026",
+      "id": "cBb6x6mbPBo"
+    },
+    {
+      "raison": "fffff",
+      "montant": 888,
+      "date": "20/07/2026",
+      "id": "N9UYbpVuehA"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

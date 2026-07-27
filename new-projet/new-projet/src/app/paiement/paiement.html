@@ -1,0 +1,41 @@
+<div class="paiement-container">
+  <div class="paiement-card">
+    <h2>Paiement</h2>
+
+    <p *ngIf="succesMessage" class="succes-message-global">✔ {{ succesMessage }}</p>
+
+    <label>Raison</label>
+    <input
+      type="text"
+      [(ngModel)]="raison"
+      name="raison"
+      placeholder="Entrer la raison"
+      (blur)="toucherRaison()"
+      [class.champ-invalide]="raisonTouche && !raisonValide"
+      [class.champ-valide]="raisonTouche && raisonValide"
+    />
+    <p *ngIf="raisonTouche && !raisonValide" class="msg-erreur-champ">✖ La raison est requise.</p>
+    <p *ngIf="raisonTouche && raisonValide" class="msg-succes-champ">✔ Raison valide.</p>
+
+    <label>Montant</label>
+    <input
+      type="number"
+      [(ngModel)]="montant"
+      name="montant"
+      placeholder="Entrer le montant"
+      min="0"
+      step="0.01"
+      (keydown)="bloquerCaracteresInvalides($event)"
+      (blur)="toucherMontant()"
+      [class.champ-invalide]="montantTouche && !montantValide"
+      [class.champ-valide]="montantTouche && montantValide"
+    />
+    <p *ngIf="montantTouche && !montantValide" class="msg-erreur-champ">✖ Montant invalide (doit être un nombre positif).</p>
+    <p *ngIf="montantTouche && montantValide" class="msg-succes-champ">✔ Montant valide.</p>
+
+    <p *ngIf="erreur" class="erreur-message">{{ erreur }}</p>
+
+    <button class="btn-valider" (click)="validerPaiement()">Valider</button>
+    <button class="btn-archive" (click)="allerArchive()">Archive Paiement</button>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="page">
+
+  <div class="top-buttons">
+    <button
+      type="button"
+      class="btn-categorie"
+      routerLink="/categorie">
+      Catégories
+    </button>
+
+    <button
+      type="button"
+      class="btn-ajouter"
+      routerLink="/ajouter">
+      Ajouter un article
+    </button>
+  </div>
+
+  <h1>Liste des Articles</h1>
+
+  <p>Nombre articles : {{ articles.length }}</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Nom</th>
+        <th>Catégorie</th>
+        <th>Prix</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let article of articles">
+        <td>
+          <img
+            [src]="article.image"
+            [alt]="article.nom"
+            class="article-img">
+        </td>
+
+        <td>{{ article.nom }}</td>
+        <td>{{ article.categorie }}</td>
+        <td>{{ article.prix }} DT</td>
+
+        <td>
+          <button
+            type="button"
+            class="btn-supprimer"
+            (click)="supprimer(article.id)">
+            Supprimer
+          </button>
+
+          <button
+            type="button"
+            class="btn-modifier">
+            Modifier
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
