@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { MontantService } from '../services/montant';
 
+
 @Component({
   selector:'app-login',
   standalone:true,
@@ -75,46 +76,43 @@ export class LoginComponent implements OnInit {
     this.emailOublieTouche=true;
   }
 
-  seConnecter(){
+  seConnecter() {
+    this.erreur = '';
+    const nomNettoye = (this.nom || '').trim().toLowerCase();
+    const emailNettoye = (this.email || '').trim();
+    const mdpNettoye = (this.motDePasse || '').trim();
 
-    this.erreur='';
+    this.authService.login(emailNettoye, mdpNettoye, nomNettoye).subscribe({
+      next: (reponse: any) => {
+        if (!reponse || (!reponse.access_token && !reponse.user)) {
+          this.erreur = 'Email ou mot de passe incorrect';
+          return;
+        }
 
-    const connexion=this.authService.login(
-      this.email,
-      this.motDePasse
-    );
+        if (reponse.access_token) {
+          localStorage.setItem('access_token', reponse.access_token);
+        }
 
-    if(connexion){
+        if (this.seSouvenir) {
+          this.authService.sauvegarderIdentifiants(emailNettoye, mdpNettoye);
+        } else {
+          this.authService.effacerIdentifiants();
+        }
 
-      if(this.nom.trim().toLowerCase()==='admin'){
+        const roleUser = (reponse.user?.role || reponse.role || '').toString().toLowerCase();
+        const isAdmin = roleUser.includes('admin') || nomNettoye === 'admin';
 
-        this.router.navigate(['/listing']);
-
-      }else{
-
-        this.afficherFondCaisse=true;
-
+        if (isAdmin) {
+          this.router.navigate(['/listing']);
+        } else {
+          this.afficherFondCaisse = true;
+        }
+      },
+      error: (err) => {
+        console.error('Erreur de connexion:', err);
+        this.erreur = 'Email ou mot de passe incorrect';
       }
-
-      if(this.seSouvenir){
-
-        this.authService.sauvegarderIdentifiants(
-          this.email,
-          this.motDePasse
-        );
-
-      }else{
-
-        this.authService.effacerIdentifiants();
-
-      }
-
-    }else{
-
-      this.erreur='Email ou mot de passe incorrect';
-
-    }
-
+    });
   }
 
   validerFondCaisse(){

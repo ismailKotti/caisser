@@ -19,7 +19,7 @@ export class PaiementService {
 
 private http = inject(HttpClient);
 
-private API_URL = 'http://localhost:3000/paiements';
+private API_URL = 'http://localhost:3001/api/payments';
 
 
 

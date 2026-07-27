@@ -22,7 +22,7 @@ export class CommandeService {
 private http = inject(HttpClient);
 
 
-private API_URL = 'http://localhost:3000/commandes';
+private API_URL = 'http://localhost:3001/api/orders';
 
 
 

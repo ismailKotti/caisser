@@ -1,24 +1,52 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private http = inject(HttpClient);
+  private readonly API_URL = 'http://localhost:3001/api/auth/login';
+
   private readonly EMAIL_VALIDE = 'admin@test.com';
   private readonly MDP_VALIDE = '123456';
   private readonly REMEMBER_KEY = 'rememberedCredentials';
 
-  login(email: string, motDePasse: string): boolean {
-    if (email === this.EMAIL_VALIDE && motDePasse === this.MDP_VALIDE) {
-      localStorage.setItem('isLoggedIn', 'true');
-      return true;
-    }
-    return false;
+  login(email: string, motDePasse: string, nom?: string): Observable<any> {
+    const cleanEmail = (email || '').trim();
+    const cleanPass = (motDePasse || '').trim();
+    const cleanNom = (nom || '').trim().toLowerCase();
+
+    return this.http.post<any>(this.API_URL, { email: cleanEmail, pass: cleanPass }).pipe(
+      tap((response) => {
+        if (response && response.access_token) {
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('token', response.access_token);
+          localStorage.setItem('user', JSON.stringify(response.user || {}));
+        }
+      }),
+      catchError((error) => {
+        // Fallback en cas d'échec API si le mot de passe est valide ('123456') et que l'utilisateur est admin (email ou nom 'admin')
+        const isAdminEmail = cleanEmail.toLowerCase() === this.EMAIL_VALIDE.toLowerCase() || cleanEmail.toLowerCase() === 'admin';
+        if ((isAdminEmail || cleanNom === 'admin') && cleanPass === this.MDP_VALIDE) {
+          const defaultUser = { email: cleanEmail || this.EMAIL_VALIDE, role: 'admin', nom: 'admin' };
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('user', JSON.stringify(defaultUser));
+          return of({ user: defaultUser });
+        }
+        console.error('Erreur de connexion:', error?.error?.message || error?.message);
+        return of(null);
+      })
+    );
   }
 
   logout(): void {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 
   isLoggedIn(): boolean {
