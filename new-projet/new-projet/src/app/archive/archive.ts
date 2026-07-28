@@ -21,30 +21,30 @@ export class ArchiveComponent implements OnInit {
   categorieActive = '';
   articleSelectionne = '';
   categories = [
-    'Cold Drink',
-    'Hot Drink',
+    'Cold Drinks',
+    'Hot Drinks',
     'Food'
   ];
   articles = [
 
     {
       nom: 'Coca Cola',
-      categorie: 'Cold Drink'
+      categorie: 'Cold Drinks'
     },
 
     {
       nom: 'Eau',
-      categorie: 'Cold Drink'
+      categorie: 'Cold Drinks'
     },
 
     {
       nom: 'Café',
-      categorie: 'Hot Drink'
+      categorie: 'Hot Drinks'
     },
 
     {
       nom: 'Thé',
-      categorie: 'Hot Drink'
+      categorie: 'Hot Drinks'
     },
 
     {
@@ -94,15 +94,12 @@ export class ArchiveComponent implements OnInit {
 
   }
   get articlesFiltres() {
-
-
-    return this.articles.filter(article =>
-
-      article.categorie === this.categorieActive
-
-    );
-
-
+    return this.articles.filter(article => {
+      if (!article || !article.categorie) return false;
+      const catArt = String(article.categorie).trim().toLowerCase().replace(/s$/, '');
+      const catAct = String(this.categorieActive).trim().toLowerCase().replace(/s$/, '');
+      return catArt === catAct;
+    });
   }
   choisirArticle(article: any) {
 

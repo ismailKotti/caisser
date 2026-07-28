@@ -5,7 +5,8 @@ import { MontantService } from '../../services/montant';
 import { ArticleService, Article } from '../../services/article.service';
 
 interface ArticlePanier{
-id:number;
+id:any;
+id_pro?:any;
 nom:string;
 image:string;
 quantite:number;
@@ -51,12 +52,12 @@ console.log("Erreur API articles :",err);
 }
 
 categories=[
-'Cold Drink',
-'Hot Drink',
+'Cold Drinks',
+'Hot Drinks',
 'Food'
 ];
 
-categorieActive='Cold Drink';
+categorieActive='Cold Drinks';
 
 articles:Article[]=[];
 
@@ -71,9 +72,12 @@ this.categorieActive=cat;
 }
 
 get articlesFiltres(){
-return this.articles.filter(
-a=>a.categorie===this.categorieActive
-);
+return this.articles.filter(a => {
+  if (!a || !a.categorie) return false;
+  const catArt = String(a.categorie || '').trim().toLowerCase().replace(/s$/, '');
+  const catAct = String(this.categorieActive || '').trim().toLowerCase().replace(/s$/, '');
+  return catArt === catAct || a.id_cat === this.categorieActive;
+});
 }
 
 ajouterArticle(article:Article){
@@ -125,13 +129,14 @@ this.panier=[];
 }
 
 get panierGroupe():ArticlePanier[]{
-const groupes:{[key:number]:ArticlePanier}={};
+const groupes:{[key:string]:ArticlePanier}={};
 
 this.panier.forEach(article=>{
-
-if(!groupes[article.id]){
-groupes[article.id]={
+const key = String((article as any).id_pro || article.id || 'inconnu');
+if(!groupes[key]){
+groupes[key]={
 id:article.id,
+id_pro: (article as any).id_pro || article.id,
 nom:article.nom,
 image:article.image,
 quantite:0,
@@ -139,8 +144,8 @@ totalPrix:0
 };
 }
 
-groupes[article.id].quantite++;
-groupes[article.id].totalPrix+=article.prix;
+groupes[key].quantite++;
+groupes[key].totalPrix+=article.prix;
 
 });
 

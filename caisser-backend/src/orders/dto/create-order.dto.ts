@@ -1,16 +1,15 @@
 import {
   IsString,
-  IsNotEmpty,
   IsNumber,
   IsArray,
   ValidateNested,
-  Min
+  Min,
+  IsOptional
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class OrderItemDto {
   @IsString()
-  @IsNotEmpty()
   id_pro: string;
 
   @Type(() => Number)
@@ -21,8 +20,8 @@ export class OrderItemDto {
 
 export class CreateOrderDto {
   @IsString()
-  @IsNotEmpty()
-  id_user: string;
+  @IsOptional()
+  id_user?: string;
 
   @IsArray()
   @ValidateNested({ each: true })

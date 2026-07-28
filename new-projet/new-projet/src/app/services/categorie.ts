@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 export class CategorieService {
 
   categories: string[] = [
-    'Cold Drink',
-    'Hot Drink',
+    'Cold Drinks',
+    'Hot Drinks',
     'Food'
   ];
 
