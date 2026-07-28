@@ -7,10 +7,13 @@ export class PaymentsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createPaymentDto: CreatePaymentDto) {
+    const action = createPaymentDto.action || createPaymentDto.raison || 'Paiement sans raison';
+    const prix_f = createPaymentDto.prix_f ?? createPaymentDto.montant ?? 0;
+
     return this.prisma.payment.create({
       data: {
-        action: createPaymentDto.action,
-        prix_f: createPaymentDto.prix_f,
+        action,
+        prix_f,
       },
     });
   }

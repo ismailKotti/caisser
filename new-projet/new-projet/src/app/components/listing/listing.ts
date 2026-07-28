@@ -53,7 +53,8 @@ export class ListingComponent implements OnInit {
     });
   }
 
-  supprimer(id: number): void {
+  supprimer(id?: number | string): void {
+    if (!id) return;
     this.articleService.supprimerArticle(id).subscribe({
       next: () => {
         this.chargerArticles();

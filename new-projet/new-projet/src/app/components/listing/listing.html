@@ -35,20 +35,20 @@
       <tr *ngFor="let article of articles">
         <td>
           <img
-            [src]="article.image"
-            [alt]="article.nom"
+            [src]="article.img || article.image"
+            [alt]="article.name_pro || article.nom"
             class="article-img">
         </td>
 
-        <td>{{ article.nom }}</td>
-        <td>{{ article.categorie }}</td>
-        <td>{{ article.prix }} DT</td>
+        <td>{{ article.name_pro || article.nom }}</td>
+        <td>{{ article.categorie?.type_cat || article.categorie || 'Sans catégorie' }}</td>
+        <td>{{ article.prix_p ?? article.prix }} DT</td>
 
         <td>
           <button
             type="button"
             class="btn-supprimer"
-            (click)="supprimer(article.id)">
+            (click)="supprimer(article.id_pro || article.id)">
             Supprimer
           </button>
 

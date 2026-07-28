@@ -1,13 +1,28 @@
-import { IsString, IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { IsString, IsNumber, Min, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePaymentDto {
   @IsString()
-  @IsNotEmpty({ message: 'L action de paiement (ex: CASH, CARD) est requise' })
-  action: string;
+  @IsOptional()
+  action?: string;
+
+  @IsString()
+  @IsOptional()
+  raison?: string;
 
   @Type(() => Number)
   @IsNumber()
   @Min(0)
-  prix_f: number;
+  @IsOptional()
+  prix_f?: number;
+
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  montant?: number;
+
+  @IsString()
+  @IsOptional()
+  date?: string;
 }

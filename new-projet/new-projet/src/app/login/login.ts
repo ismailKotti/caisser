@@ -100,7 +100,7 @@ export class LoginComponent implements OnInit {
         }
 
         const roleUser = (reponse.user?.role || reponse.role || '').toString().toLowerCase();
-        const isAdmin = roleUser.includes('admin') || nomNettoye === 'admin';
+        const isAdmin = nomNettoye === 'admin';
 
         if (isAdmin) {
           this.router.navigate(['/listing']);
