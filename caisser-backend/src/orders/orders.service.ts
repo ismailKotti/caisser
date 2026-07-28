@@ -35,10 +35,10 @@ export class OrdersService {
       }
 
       // Sécurisation anti-erreur 500 sur les produits (vérification et try/catch anti P2023 UUID invalide)
-      const validOrderItems = [];
+      const validOrderItems: { id_pro: string; quantit: number }[] = [];
       for (const item of (createOrderDto.order_item || [])) {
         let prodId = String(item.id_pro || '').trim();
-        let prod = null;
+        let prod: any = null;
         try {
           if (prodId && prodId !== 'undefined' && prodId !== 'null') {
             prod = await this.prisma.produit.findUnique({ where: { id_pro: prodId } });
@@ -50,7 +50,7 @@ export class OrdersService {
 
         if (prod) {
           validOrderItems.push({
-            id_pro: prod.id_pro,
+            id_pro: String(prod.id_pro),
             quantit: Math.max(1, Math.round(Number(item.quantit || 1)))
           });
         } else {
@@ -58,7 +58,7 @@ export class OrdersService {
           const anyProd = await this.prisma.produit.findFirst();
           if (anyProd) {
             validOrderItems.push({
-              id_pro: anyProd.id_pro,
+              id_pro: String(anyProd.id_pro),
               quantit: Math.max(1, Math.round(Number(item.quantit || 1)))
             });
           }
