@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ArticleService, Article } from '../../services/article.service';
-import { CategorieService } from '../../services/categorie';
+import { CategorieService, Categorie } from '../../services/categorie';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -26,7 +26,7 @@ prix:0,
 image:'',
 categorie:''
 };
-  categories: string[] = [];
+  categories: Categorie[] = [];
 
   messageErreur = '';
   constructor(
@@ -36,8 +36,9 @@ categorie:''
   ){}
   ngOnInit(){
 
-    this.categories =
-    this.categorieService.getCategories();
+    this.categorieService.getCategories().subscribe(data => {
+      this.categories = data;
+    });
 
   }
   retour() {

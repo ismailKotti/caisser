@@ -39,6 +39,24 @@ console.log("Articles API :", data);
 
 this.articles=data;
 
+const uniqueCats = Array.from(new Set(data.map(a => {
+  if (!a) return 'Sans catégorie';
+  if (typeof a.categorie === 'object' && a.categorie?.type_cat) return String(a.categorie.type_cat).trim();
+  if (typeof a.categorie === 'string' && a.categorie.trim() !== '') return a.categorie.trim();
+  if (a.id_cat) return a.id_cat; // Fallback
+  return 'Sans catégorie';
+}).filter(c => c && c !== '')));
+
+if (uniqueCats.length > 0) {
+  this.categories = uniqueCats as string[];
+  if (!this.categorieActive || !this.categories.includes(this.categorieActive)) {
+    this.categorieActive = this.categories[0];
+  }
+} else {
+  this.categories = ['Cold Drinks', 'Hot Drinks', 'Food'];
+  this.categorieActive = 'Cold Drinks';
+}
+
 },
 
 error:(err)=>{
@@ -51,13 +69,8 @@ console.log("Erreur API articles :",err);
 
 }
 
-categories=[
-'Cold Drinks',
-'Hot Drinks',
-'Food'
-];
-
-categorieActive='Cold Drinks';
+categories: string[] = [];
+categorieActive = '';
 
 articles:Article[]=[];
 
@@ -73,10 +86,18 @@ this.categorieActive=cat;
 
 get articlesFiltres(){
 return this.articles.filter(a => {
-  if (!a || !a.categorie) return false;
-  const catArt = String(a.categorie || '').trim().toLowerCase().replace(/s$/, '');
-  const catAct = String(this.categorieActive || '').trim().toLowerCase().replace(/s$/, '');
-  return catArt === catAct || a.id_cat === this.categorieActive;
+  if (!a) return false;
+  
+  let catArt = '';
+  if (typeof a.categorie === 'object' && a.categorie?.type_cat) {
+    catArt = String(a.categorie.type_cat).trim().toLowerCase();
+  } else if (typeof a.categorie === 'string') {
+    catArt = a.categorie.trim().toLowerCase();
+  }
+  
+  const catAct = String(this.categorieActive || '').trim().toLowerCase();
+  
+  return catArt === catAct || String(a.id_cat) === this.categorieActive;
 });
 }
 
