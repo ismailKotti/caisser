@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MontantService } from '../../services/montant';
@@ -13,14 +13,23 @@ import { MontantService } from '../../services/montant';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
   showArchiveMenu = false;
+  montantActuel = 0;
 
   constructor(
     private router: Router,
-    public montantService: MontantService
+    public montantService: MontantService,
+    private cdr: ChangeDetectorRef
   ) {}
+
+  ngOnInit() {
+    this.montantService.montantTotal$.subscribe(val => {
+      this.montantActuel = val;
+      this.cdr.detectChanges();
+    });
+  }
 
   goCaisse() {
     this.router.navigate(['/caisse']);
