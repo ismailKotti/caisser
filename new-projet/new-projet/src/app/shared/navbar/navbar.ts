@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MontantService } from '../../services/montant';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -21,7 +22,8 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     public montantService: MontantService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -41,6 +43,11 @@ export class NavbarComponent implements OnInit {
 
   toggleArchiveMenu() {
     this.showArchiveMenu = !this.showArchiveMenu;
+  }
+
+  deconnecter() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
 }

@@ -35,7 +35,7 @@ export class OrdersService {
       }
 
       // Sécurisation anti-erreur 500 sur les produits (vérification et try/catch anti P2023 UUID invalide)
-      const validOrderItems: { id_pro: string; quantit: number }[] = [];
+      const validOrderItems: { id_pro: string; nom_pro: string; prix_pro: number; quantit: number }[] = [];
       for (const item of (createOrderDto.order_item || [])) {
         let prodId = String(item.id_pro || '').trim();
         let prod: any = null;
@@ -51,6 +51,8 @@ export class OrdersService {
         if (prod) {
           validOrderItems.push({
             id_pro: String(prod.id_pro),
+            nom_pro: String(prod.name_pro),
+            prix_pro: Number(prod.prix_p),
             quantit: Math.max(1, Math.round(Number(item.quantit || 1)))
           });
         } else {
@@ -59,6 +61,8 @@ export class OrdersService {
           if (anyProd) {
             validOrderItems.push({
               id_pro: String(anyProd.id_pro),
+              nom_pro: String(anyProd.name_pro),
+              prix_pro: Number(anyProd.prix_p),
               quantit: Math.max(1, Math.round(Number(item.quantit || 1)))
             });
           }

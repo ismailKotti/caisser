@@ -58,10 +58,10 @@ export class CommandeService {
         temps: cmd.createdAt ? new Date(cmd.createdAt) : (cmd.temps ? new Date(cmd.temps) : new Date()),
         articles: (cmd.order_item || cmd.articles || []).map((item: any) => ({
           ...item,
-          nom: item.produit?.name_pro || item.nom || 'Article inconnu',
+          nom: item.produit?.name_pro || item.nom_pro || item.nom || 'Article inconnu',
           quantite: item.quantit ?? item.quantite ?? 1,
           image: item.produit?.img || item.image || '',
-          totalPrix: (item.quantit ?? item.quantite ?? 1) * (item.produit?.prix_p ?? 0)
+          totalPrix: (item.quantit ?? item.quantite ?? 1) * (item.produit?.prix_p ?? item.prix_pro ?? 0)
         }))
       })))
     );

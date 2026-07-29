@@ -38,7 +38,7 @@ model Produit {
   img        String
   prix_p     Float
   id_cat     String
-  categorie  Categorie   @relation(fields: [id_cat], references: [id_cat])
+  categorie  Categorie   @relation(fields: [id_cat], references: [id_cat], onDelete: Cascade)
   orderItems OrderItem[]
   createdAt  DateTime    @default(now())
 }
@@ -56,11 +56,13 @@ model Order {
 
 model OrderItem {
   id_item  String  @id @default(uuid())
-  id_pro   String
+  id_pro   String?
+  nom_pro  String?
+  prix_pro Float?
   quantit  Int
   orderId  String
-  order    Order   @relation(fields: [orderId], references: [id_order])
-  produit  Produit @relation(fields: [id_pro], references: [id_pro])
+  order    Order   @relation(fields: [orderId], references: [id_order], onDelete: Cascade)
+  produit  Produit? @relation(fields: [id_pro], references: [id_pro], onDelete: SetNull)
 }
 
 model Payment {
