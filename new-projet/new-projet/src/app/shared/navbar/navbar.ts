@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
 
   showArchiveMenu = false;
   montantActuel = 0;
+  userName = 'Connected User';
 
   constructor(
     private router: Router,
@@ -29,6 +30,15 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.montantService.montantTotal$.subscribe(val => {
       this.montantActuel = val;
+      this.cdr.detectChanges();
+    });
+
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.userName = user.nom || user.email || 'Connected User';
+      } else {
+        this.userName = 'Connected User';
+      }
       this.cdr.detectChanges();
     });
   }
