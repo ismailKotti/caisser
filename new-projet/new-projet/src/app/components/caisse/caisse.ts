@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommandeService } from '../../services/commande';
 import { MontantService } from '../../services/montant';
@@ -25,7 +25,8 @@ export class CaisseComponent{
 constructor(
 private commandeService: CommandeService,
 private montantService: MontantService,
-private articleService: ArticleService
+private articleService: ArticleService,
+private cdr: ChangeDetectorRef
 ){}
 
 ngOnInit(){
@@ -56,6 +57,8 @@ if (uniqueCats.length > 0) {
   this.categories = ['Cold Drinks', 'Hot Drinks', 'Food'];
   this.categorieActive = 'Cold Drinks';
 }
+
+this.cdr.detectChanges();
 
 },
 

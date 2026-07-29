@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommandeService, Commande } from '../services/commande';
@@ -28,7 +28,8 @@ export class ArchiveComponent implements OnInit {
   constructor(
     private commandeService: CommandeService,
     private categorieService: CategorieService,
-    private articleService: ArticleService
+    private articleService: ArticleService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -37,10 +38,12 @@ export class ArchiveComponent implements OnInit {
       if (this.categories.length > 0) {
         this.categorieActive = this.categories[0].type_cat || '';
       }
+      this.cdr.detectChanges();
     });
 
     this.articleService.getArticles().subscribe(data => {
       this.articles = data;
+      this.cdr.detectChanges();
     });
 
   this.commandeService.getCommandes()
@@ -51,6 +54,7 @@ export class ArchiveComponent implements OnInit {
   console.log("Commandes reçues :", data);
 
   this.commandes = data;
+  this.cdr.detectChanges();
 
 },
 
