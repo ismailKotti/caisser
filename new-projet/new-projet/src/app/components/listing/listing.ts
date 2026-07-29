@@ -45,7 +45,7 @@ export class ListingComponent implements OnInit {
 
         this.articles = [...data];
 
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
       },
       error: (err) => {
         console.error('Erreur API articles :', err);

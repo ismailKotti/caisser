@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategorieService, Categorie } from '../../services/categorie';
@@ -13,13 +13,14 @@ import { CategorieService, Categorie } from '../../services/categorie';
   templateUrl: './categorie.html',
   styleUrl: './categorie.css'
 })
-export class CategorieComponent {
+export class CategorieComponent implements OnInit {
 
   nouvelleCategorie = '';
   categories: Categorie[] = [];
 
   constructor(
-    private categorieService: CategorieService
+    private categorieService: CategorieService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -30,6 +31,7 @@ export class CategorieComponent {
     this.categorieService.getCategories().subscribe({
       next: (data) => {
         this.categories = data;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error("Erreur chargement catégories:", err)
     });
