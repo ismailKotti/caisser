@@ -6,6 +6,8 @@ import {
   ArticleService,
 } from '../../services/article.service';
 
+import { AuthService } from '../../services/auth';
+
 @Component({
   selector: 'app-listing',
   standalone: true,
@@ -24,6 +26,7 @@ export class ListingComponent implements OnInit {
     private readonly articleService: ArticleService,
     private readonly router: Router,
     private readonly changeDetectorRef: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +39,11 @@ export class ListingComponent implements OnInit {
 
   allerAjouter(): void {
     this.router.navigate(['/ajouter']);
+  }
+
+  deconnecter(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   chargerArticles(): void {
