@@ -26,9 +26,9 @@
         <div class="categories">
             <button 
                 *ngFor="let cat of categories" 
-                (click)="changerCategorie(cat)" 
-                [class.active]="categorieActive === cat">
-                {{cat}}
+                (click)="changerCategorie(cat.type_cat)" 
+                [class.active]="categorieActive === cat.type_cat">
+                {{cat.type_cat}}
             </button>
         </div>
 
