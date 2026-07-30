@@ -5,207 +5,223 @@ import { MontantService } from '../../services/montant';
 import { ArticleService, Article } from '../../services/article.service';
 
 interface ArticlePanier{
-id:any;
-id_pro?:any;
-nom:string;
-image:string;
-quantite:number;
-totalPrix:number;
+  id:any;
+  id_pro?:any;
+  nom:string;
+  image:string;
+  quantite:number;
+  totalPrix:number;
 }
 
 @Component({
-selector:'app-caisse',
-standalone:true,
-imports:[CommonModule],
-templateUrl:'./caisse.html',
-styleUrl:'./caisse.css'
+  selector:'app-caisse',
+  standalone:true,
+  imports:[CommonModule],
+  templateUrl:'./caisse.html',
+  styleUrl:'./caisse.css'
 })
 export class CaisseComponent{
 
-constructor(
-private commandeService: CommandeService,
-private montantService: MontantService,
-private articleService: ArticleService,
-private cdr: ChangeDetectorRef
-){}
+  constructor(
+    private commandeService:CommandeService,
+    private montantService:MontantService,
+    private articleService:ArticleService,
+    private cdr:ChangeDetectorRef
+  ){}
 
-ngOnInit(){
+  categories:string[]=['Tous'];
 
-this.articleService.getArticles()
-.subscribe({
+  categorieActive='Tous';
 
-next:(data)=>{
+  articles:Article[]=[];
 
-console.log("Articles API :", data);
+  panier:Article[]=[];
 
-this.articles=data;
+  message='';
 
-const uniqueCats = Array.from(new Set(data.map(a => {
-  if (!a) return 'Sans catégorie';
-  if (typeof a.categorie === 'object' && a.categorie?.type_cat) return String(a.categorie.type_cat).trim();
-  if (typeof a.categorie === 'string' && a.categorie.trim() !== '') return a.categorie.trim();
-  if (a.id_cat) return a.id_cat; // Fallback
-  return 'Sans catégorie';
-}).filter(c => c && c !== '')));
+  timer:any;
 
-if (uniqueCats.length > 0) {
-  this.categories = uniqueCats as string[];
-  if (!this.categorieActive || !this.categories.includes(this.categorieActive)) {
-    this.categorieActive = this.categories[0];
+  ngOnInit(){
+
+    this.articleService.getArticles().subscribe({
+
+      next:(data)=>{
+
+        console.log(data);
+
+        this.articles=data;
+console.table(this.articles);
+        const uniqueCats=Array.from(
+          new Set(
+            data.map(article=>{
+
+              if(typeof article.categorie==='object' && article.categorie?.type_cat){
+                return article.categorie.type_cat;
+              }
+
+              if(typeof article.categorie==='string'){
+                return article.categorie;
+              }
+
+              return '';
+
+            }).filter(c=>c!='')
+          )
+        );
+
+        this.categories=[
+          'Tous',
+          ...uniqueCats as string[]
+        ];
+
+        this.categorieActive='Tous';
+
+        this.cdr.detectChanges();
+
+      },
+
+      error:(err)=>{
+        console.log(err);
+      }
+
+    });
+
   }
-} else {
-  this.categories = ['Cold Drinks', 'Hot Drinks', 'Food'];
-  this.categorieActive = 'Cold Drinks';
-}
 
-this.cdr.detectChanges();
-
-},
-
-error:(err)=>{
-
-console.log("Erreur API articles :",err);
-
-}
-
-});
-
-}
-
-categories: string[] = [];
-categorieActive = '';
-
-articles:Article[]=[];
-
-panier:Article[]=[];
-
-message='';
-
-timer:any;
-
-changerCategorie(cat:string){
-this.categorieActive=cat;
-}
-
-get articlesFiltres(){
-return this.articles.filter(a => {
-  if (!a) return false;
-  
-  let catArt = '';
-  if (typeof a.categorie === 'object' && a.categorie?.type_cat) {
-    catArt = String(a.categorie.type_cat).trim().toLowerCase();
-  } else if (typeof a.categorie === 'string') {
-    catArt = a.categorie.trim().toLowerCase();
+  changerCategorie(cat:string){
+    this.categorieActive=cat;
   }
-  
-  const catAct = String(this.categorieActive || '').trim().toLowerCase();
-  
-  return catArt === catAct || String(a.id_cat) === this.categorieActive;
-});
-}
 
-ajouterArticle(article:Article){
-this.panier.push(article);
-}
+  get articlesFiltres():Article[]{
 
-get total(){
-return this.panier.reduce(
-(s,a)=>s+a.prix,
-0
-);
-}
+    if(this.categorieActive==='Tous'){
+      return this.articles;
+    }
 
-validerCommande(){
+    return this.articles.filter(article=>{
 
-if(this.panier.length===0){
-return;
-}
+      let categorie='';
 
-const commande={
-articles:this.panierGroupe,
-montant:this.total,
-temps:new Date()
-};
+      if(typeof article.categorie==='object' && article.categorie?.type_cat){
+        categorie=article.categorie.type_cat;
+      }
 
-this.commandeService.ajouterCommande(commande)
-.subscribe({
-next:()=>{
-this.montantService.ajouterMontant(this.total);
-this.panier=[];
-this.message='Votre commande est validée avec succès';
+      else if(typeof article.categorie==='string'){
+        categorie=article.categorie;
+      }
 
-clearTimeout(this.timer);
+      return categorie.trim().toLowerCase()===this.categorieActive.trim().toLowerCase();
 
-this.timer=setTimeout(()=>{
-this.message='';
-},3000);
+    });
 
-},
-error:(err)=>{
-console.log("Erreur API commande :",err);
-}
-});
+  }
 
-}
+  ajouterArticle(article:Article){
+    this.panier.push(article);
+  }
 
-viderPanier(){
-this.panier=[];
-}
+  get total(){
+    return this.panier.reduce((s,a)=>s+a.prix,0);
+  }
 
-get panierGroupe():ArticlePanier[]{
-const groupes:{[key:string]:ArticlePanier}={};
+  validerCommande(){
 
-this.panier.forEach(article=>{
-const key = String((article as any).id_pro || article.id || 'inconnu');
-if(!groupes[key]){
-groupes[key]={
-id:article.id,
-id_pro: (article as any).id_pro || article.id,
-nom:article.nom,
-image:article.image,
-quantite:0,
-totalPrix:0
-};
-}
+    if(this.panier.length===0){
+      return;
+    }
 
-groupes[key].quantite++;
-groupes[key].totalPrix+=article.prix;
+    const commande={
+      articles:this.panierGroupe,
+      montant:this.total,
+      temps:new Date()
+    };
 
-});
+    this.commandeService.ajouterCommande(commande).subscribe({
 
-return Object.values(groupes);
-}
+      next:()=>{
 
-augmenterArticle(id:number){
+        this.montantService.ajouterMontant(this.total);
 
-const article=this.articles.find(
-a=>a.id===id
-);
+        this.panier=[];
 
-if(article){
-this.panier.push(article);
-}
+        this.message='Votre commande est validée avec succès';
 
-}
+        clearTimeout(this.timer);
 
-diminuerArticle(id:number){
+        this.timer=setTimeout(()=>{
+          this.message='';
+        },3000);
 
-const index=this.panier.findIndex(
-a=>a.id===id
-);
+      },
 
-if(index!==-1){
-this.panier.splice(index,1);
-}
+      error:(err)=>{
+        console.log(err);
+      }
 
-}
+    });
 
-supprimerLigne(id:number){
+  }
 
-this.panier=this.panier.filter(
-a=>a.id!==id
-);
+  viderPanier(){
+    this.panier=[];
+  }
 
-}
+  get panierGroupe():ArticlePanier[]{
+
+    const groupes:{[key:string]:ArticlePanier}={};
+
+    this.panier.forEach(article=>{
+
+      const key=String((article as any).id_pro || article.id);
+
+      if(!groupes[key]){
+
+        groupes[key]={
+
+          id:article.id,
+          id_pro:(article as any).id_pro || article.id,
+          nom:article.nom,
+          image:article.image,
+          quantite:0,
+          totalPrix:0
+
+        };
+
+      }
+
+      groupes[key].quantite++;
+      groupes[key].totalPrix+=article.prix;
+
+    });
+
+    return Object.values(groupes);
+
+  }
+
+  augmenterArticle(id:number){
+
+    const article=this.articles.find(a=>a.id===id);
+
+    if(article){
+      this.panier.push(article);
+    }
+
+  }
+
+  diminuerArticle(id:number){
+
+    const index=this.panier.findIndex(a=>a.id===id);
+
+    if(index!=-1){
+      this.panier.splice(index,1);
+    }
+
+  }
+
+  supprimerLigne(id:number){
+
+    this.panier=this.panier.filter(a=>a.id!==id);
+
+  }
 
 }
