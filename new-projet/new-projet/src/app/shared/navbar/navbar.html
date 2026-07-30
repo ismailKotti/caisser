@@ -1,11 +1,11 @@
 <header class="navbar">
 
   <div class="user">
-    Connected User
+    {{ userName }}
   </div>
 
   <div class="total">
-    Montant Total : {{ montantService.getMontantTotal() }} DT
+    Montant Total : {{ montantActuel }} DT
   </div>
 
   <div class="actions">
@@ -38,7 +38,7 @@
       Paiement
     </button>
 
-    <button class="logout">
+    <button class="logout" (click)="deconnecter()">
       Déconnecter
     </button>
 

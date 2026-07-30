@@ -22,11 +22,11 @@
         </thead>
         <tbody>
             <tr *ngFor="let c of categories">
-                <td>{{ c }}</td>
+                <td>{{ c.type_cat }}</td>
                 <td class="text-right">
                     <button 
                         class="btn-delete" 
-                        (click)="supprimerCategorie(c)">
+                        (click)="supprimerCategorie(c.id_cat)">
                         Supprimer
                     </button>
                 </td>

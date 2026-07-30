@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommandeService, Commande } from '../services/commande';
-
+import { CategorieService, Categorie } from '../services/categorie';
+import { ArticleService, Article } from '../services/article.service';
 
 @Component({
   selector: 'app-archive',
@@ -20,48 +21,30 @@ export class ArchiveComponent implements OnInit {
   afficherChoix = false;
   categorieActive = '';
   articleSelectionne = '';
-  categories = [
-    'Cold Drinks',
-    'Hot Drinks',
-    'Food'
-  ];
-  articles = [
+  
+  categories: Categorie[] = [];
+  articles: Article[] = [];
 
-    {
-      nom: 'Coca Cola',
-      categorie: 'Cold Drinks'
-    },
-
-    {
-      nom: 'Eau',
-      categorie: 'Cold Drinks'
-    },
-
-    {
-      nom: 'Café',
-      categorie: 'Hot Drinks'
-    },
-
-    {
-      nom: 'Thé',
-      categorie: 'Hot Drinks'
-    },
-
-    {
-      nom: 'Pizza',
-      categorie: 'Food'
-    },
-
-    {
-      nom: 'Burger',
-      categorie: 'Food'
-    }
-
-  ];
   constructor(
-    private commandeService: CommandeService
+    private commandeService: CommandeService,
+    private categorieService: CategorieService,
+    private articleService: ArticleService,
+    private cdr: ChangeDetectorRef
   ) {}
+
   ngOnInit() {
+    this.categorieService.getCategories().subscribe(data => {
+      this.categories = data;
+      if (this.categories.length > 0) {
+        this.categorieActive = this.categories[0].type_cat || '';
+      }
+      this.cdr.detectChanges();
+    });
+
+    this.articleService.getArticles().subscribe(data => {
+      this.articles = data;
+      this.cdr.detectChanges();
+    });
 
   this.commandeService.getCommandes()
   .subscribe({
@@ -71,6 +54,7 @@ export class ArchiveComponent implements OnInit {
   console.log("Commandes reçues :", data);
 
   this.commandes = data;
+  this.cdr.detectChanges();
 
 },
 
@@ -88,17 +72,25 @@ export class ArchiveComponent implements OnInit {
     this.afficherChoix = !this.afficherChoix;
 
   }
-  changerCategorie(cat: string) {
-
-    this.categorieActive = cat;
-
+  changerCategorie(cat?: string) {
+    this.categorieActive = cat || '';
   }
   get articlesFiltres() {
-    return this.articles.filter(article => {
-      if (!article || !article.categorie) return false;
-      const catArt = String(article.categorie).trim().toLowerCase().replace(/s$/, '');
-      const catAct = String(this.categorieActive).trim().toLowerCase().replace(/s$/, '');
-      return catArt === catAct;
+    return this.articles.filter(a => {
+      if (!a || !a.categorie) return false;
+      
+      let catArt = '';
+      if (typeof a.categorie === 'object' && a.categorie.type_cat) {
+        catArt = a.categorie.type_cat.trim().toLowerCase();
+      } else if (typeof a.categorie === 'string') {
+        catArt = a.categorie.trim().toLowerCase();
+      } else {
+        catArt = String(a.id_cat || 'Sans catégorie').trim().toLowerCase();
+      }
+      
+      const catAct = String(this.categorieActive || '').trim().toLowerCase();
+      
+      return catArt === catAct || String(a.id_cat) === this.categorieActive;
     });
   }
   choisirArticle(article: any) {

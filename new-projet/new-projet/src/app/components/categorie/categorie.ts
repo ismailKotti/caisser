@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CategorieService } from '../../services/categorie';
+import { CategorieService, Categorie } from '../../services/categorie';
+
 @Component({
   selector: 'app-categorie',
   standalone: true,
@@ -12,43 +13,57 @@ import { CategorieService } from '../../services/categorie';
   templateUrl: './categorie.html',
   styleUrl: './categorie.css'
 })
-export class CategorieComponent {
+export class CategorieComponent implements OnInit {
 
   nouvelleCategorie = '';
-
-  categories: string[] = [];
+  categories: Categorie[] = [];
 
   constructor(
-    private categorieService: CategorieService
+    private categorieService: CategorieService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
+    this.chargerCategories();
+  }
 
-    this.categories =
-      this.categorieService.getCategories();
-
+  chargerCategories() {
+    this.categorieService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error("Erreur chargement catégories:", err)
+    });
   }
 
   ajouterCategorie() {
-
-    this.categorieService.ajouterCategorie(
-      this.nouvelleCategorie
-    );
-
-    this.nouvelleCategorie = '';
-
-    this.categories =
-      this.categorieService.getCategories();
-
+    if (this.nouvelleCategorie.trim()) {
+      this.categorieService.ajouterCategorie(this.nouvelleCategorie).subscribe({
+        next: () => {
+          this.nouvelleCategorie = '';
+          this.chargerCategories();
+        },
+        error: (err) => console.error("Erreur ajout catégorie:", err)
+      });
+    }
   }
 
-  supprimerCategorie(categorie: string) {
-
-    this.categorieService.supprimerCategorie(categorie);
-
-    this.categories =
-      this.categorieService.getCategories();
-
+  supprimerCategorie(id_cat?: string) {
+    if (!id_cat) return;
+    this.categorieService.supprimerCategorie(id_cat).subscribe({
+      next: () => {
+        this.chargerCategories();
+      },
+      error: (err) => {
+        // If it's a 404, it means it's already deleted (e.g. from a double-click)
+        if (err.status === 404) {
+          this.chargerCategories();
+        } else {
+          console.error("Erreur suppression catégorie:", err);
+        }
+      }
+    });
   }
 
 }

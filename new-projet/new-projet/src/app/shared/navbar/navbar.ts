@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MontantService } from '../../services/montant';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -13,14 +14,34 @@ import { MontantService } from '../../services/montant';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
   showArchiveMenu = false;
+  montantActuel = 0;
+  userName = 'Connected User';
 
   constructor(
     private router: Router,
-    public montantService: MontantService
+    public montantService: MontantService,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
+
+  ngOnInit() {
+    this.montantService.montantTotal$.subscribe(val => {
+      this.montantActuel = val;
+      this.cdr.detectChanges();
+    });
+
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.userName = user.nom || user.email || 'Connected User';
+      } else {
+        this.userName = 'Connected User';
+      }
+      this.cdr.detectChanges();
+    });
+  }
 
   goCaisse() {
     this.router.navigate(['/caisse']);
@@ -32,6 +53,11 @@ export class NavbarComponent {
 
   toggleArchiveMenu() {
     this.showArchiveMenu = !this.showArchiveMenu;
+  }
+
+  deconnecter() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
 }

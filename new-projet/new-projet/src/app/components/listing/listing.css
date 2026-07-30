@@ -126,7 +126,8 @@ margin-left:10px;
 }
 
 .btn-categorie,
-.btn-ajouter {
+.btn-ajouter,
+.btn-logout {
   width: 180px;      /* نفس العرض */
   height: 45px;      /* نفس الارتفاع */
   border: none;
@@ -144,10 +145,18 @@ margin-left:10px;
   background-color: #2ecc71;
 }
 
+.btn-logout {
+  background-color: #e74c3c;
+}
+
 .btn-categorie:hover {
   background-color: #2980b9;
 }
 
 .btn-ajouter:hover {
   background-color: #27ae60;
+}
+
+.btn-logout:hover {
+  background-color: #c0392b;
 }

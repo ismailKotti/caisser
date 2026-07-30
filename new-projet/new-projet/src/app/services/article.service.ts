@@ -52,12 +52,11 @@ export class ArticleService {
 
   ajouterArticle(article: Article): Observable<Article> {
     const payload = {
-      ...article,
       name_pro: article.name_pro || article.nom,
       desc: article.desc || 'Aucune description',
       img: article.img || article.image,
-      prix_p: article.prix_p || article.prix,
-      id_cat: article.id_cat || '11111111-0000-0000-0000-000000000001' // Valeur de fallback si id_cat non fournie
+      prix_p: Number(article.prix_p || article.prix || 0),
+      id_cat: article.id_cat || article.categorie || '11111111-0000-0000-0000-000000000001'
     };
     return this.http.post<Article>(
       this.API_URL,
@@ -76,10 +75,11 @@ export class ArticleService {
   modifierArticle(article: Article): Observable<Article> {
     const id = article.id_pro || article.id;
     const payload = {
-      ...article,
       name_pro: article.name_pro || article.nom,
+      desc: article.desc || 'Aucune description',
       img: article.img || article.image,
-      prix_p: article.prix_p || article.prix
+      prix_p: Number(article.prix_p || article.prix || 0),
+      id_cat: article.id_cat || article.categorie || '11111111-0000-0000-0000-000000000001'
     };
     return this.http.put<Article>(
       `${this.API_URL}/${id}`,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaiementService, Paiement } from '../services/paiement';
 
@@ -16,7 +16,8 @@ export class ArchivePaiementComponent implements OnInit {
 paiements:Paiement[]=[];
 
 constructor(
-private paiementService:PaiementService
+private paiementService:PaiementService,
+private cdr: ChangeDetectorRef
 ){}
 
 ngOnInit(){
@@ -29,6 +30,7 @@ next:(data)=>{
 console.log("Paiements reçus :", data);
 
 this.paiements=data;
+this.cdr.detectChanges();
 
 },
 
